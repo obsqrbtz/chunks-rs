@@ -14,7 +14,6 @@ use networkmanager::{
     devices::{Device, Wireless},
     Error, NetworkManager,
 };
-use pulsectl::controllers::{DeviceControl, SinkController};
 use regex::Regex;
 use sysinfo::{DiskExt, System, SystemExt};
 
@@ -111,24 +110,6 @@ impl Internal {
             Ok(format!("{} {}", emoji, temperature).trim().to_string())
         } else {
             Ok("Weather data not available".to_string())
-        }
-    }
-
-    /// Uses pulsectl-rs to return the formatted volume level.
-    pub fn get_pactl_vol() -> String {
-        let mut handler = SinkController::create().unwrap();
-
-        let devices = handler.list_devices().expect("Failed to list devices");
-
-        if let Some(device) = devices.first() {
-            let vol = device.volume.to_string();
-
-            vol.split_whitespace()
-                .find(|s| s.ends_with('%'))
-                .unwrap_or("0%")
-                .to_string()
-        } else {
-            "Unknown".to_string()
         }
     }
 
